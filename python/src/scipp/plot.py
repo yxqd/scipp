@@ -133,6 +133,12 @@ def dispatch_to_backend(get_color=False, backend=None, **kwargs):
             return get_plotly_color(**kwargs)
         else:
             plot_plotly(**kwargs)
+    elif backend == "bqplot":
+        from .plot_bqplot import plot_bqplot, get_bqplot_color
+        if get_color:
+            return get_bqplot_color(**kwargs)
+        else:
+            plot_bqplot(**kwargs)
     else:
         raise RuntimeError("Unknown backend {}. Currently supported "
                            "backends are 'plotly' and "
