@@ -102,10 +102,10 @@ def plot(input_data, collapse=None, backend=None, color=None, **kwargs):
             color = None
             name = key
         if collapse is not None:
-            plot_collapse(input_data=val[1], dim=collapse, name=name,
+            return plot_collapse(input_data=val[1], dim=collapse, name=name,
                           backend=backend, config=config, **kwargs)
         else:
-            dispatch_to_backend(get_color=False, backend=backend,
+            return dispatch_to_backend(get_color=False, backend=backend,
                                 input_data=val[1], ndim=val[0], name=name,
                                 color=color, config=config, **kwargs)
 
@@ -138,7 +138,7 @@ def dispatch_to_backend(get_color=False, backend=None, **kwargs):
         if get_color:
             return get_bqplot_color(**kwargs)
         else:
-            plot_bqplot(**kwargs)
+            return plot_bqplot(**kwargs)
     else:
         raise RuntimeError("Unknown backend {}. Currently supported "
                            "backends are 'plotly' and "
@@ -232,7 +232,7 @@ def plot_collapse(input_data, dim=None, name=None, filename=None, backend=None,
                                          index=i))
 
     # Send the newly created dictionary of DataProxy to the plot_1d function
-    dispatch_to_backend(get_color=False, backend=backend, input_data=data,
+    return dispatch_to_backend(get_color=False, backend=backend, input_data=data,
                         ndim=1, color=color, **kwargs)
 
-    return
+    # return
