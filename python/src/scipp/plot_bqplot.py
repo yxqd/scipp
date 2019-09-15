@@ -75,6 +75,7 @@ def __plot_1d(input_data, logx=False, logy=False, logxy=False, axes=None,
     # bar_labs = []
     # bar_cols = []
     marks = []
+    # print(color)
 
     for name, var in input_data.items():
         # xcoord = var.coords[var.dims[0]]
@@ -103,7 +104,7 @@ def __plot_1d(input_data, logx=False, logy=False, logxy=False, axes=None,
             # bars["colors"].append(color[color_count])
             marks.append(bq.Bars(x=xc, y=y, scales={'x': x_sc, 'y': y_sc},
                                  padding=0.0, labels=[ylab],
-                                 opacities=[0.6]*len(xc),
+                                 # opacities=[0.6]*len(xc),
                                  colors=[color[color_count]],
                                  stroke=color[color_count]))
             xerr = xc
@@ -235,11 +236,13 @@ def __plot_2d(input_data, name=None, axes=None, contours=False, cb=None,
 
 
     figs = []
-    col_sc = bq.ColorScale(scheme=cbar["name"])
+    # col_sc = bq.ColorScale(scheme=cbar["name"])
     ax_x = bq.Axis(scale=x_sc, label=xcoord)
     ax_y = bq.Axis(scale=y_sc, orientation='vertical', label=ycoord)
-    ax_c = bq.ColorAxis(scale=col_sc)
-    ax_c.side = 'right'
+    # ax_c = bq.ColorAxis(scale=col_sc)
+    # ax_c.side = 'right'
+    # ax_v = bq.ColorAxis(scale=col_sc)
+    # ax_v.side = 'right'
 
 
     for i, (key, val) in enumerate(sorted(data.items())):
@@ -261,20 +264,21 @@ def __plot_2d(input_data, name=None, axes=None, contours=False, cb=None,
         if cbar[val["cbmax"]] is None:
             cbar[val["cbmax"]] = np.amax(z[np.where(np.isfinite(z))])
 
-        args = {"vmin": cbar[val["cbmin"]], "vmax": cbar[val["cbmax"]],
-                "cmap": cbar["name"]}
+        # args = {"vmin": cbar[val["cbmin"]], "vmax": cbar[val["cbmax"]],
+        #         "cmap": cbar["name"]}
 
-        # col_sc = bq.ColorScale(scheme=cbar["name"])
+        col_sc = bq.ColorScale(scheme=cbar["name"], min=cbar[val["cbmin"]], max=cbar[val["cbmax"]])
         # ax_x = bq.Axis(scale=x_sc, label=xcoord)
         # ax_y = bq.Axis(scale=y_sc, orientation='vertical', label=ycoord)
-        # ax_c = bq.ColorAxis(scale=col_sc)
+        ax_c = bq.ColorAxis(scale=col_sc, label=axis_label(var=input_data, name=val["name"],
+                         log=cbar["log"]))
 
         heat = bq.HeatMap(color=z, x=xc, y=yc, scales={'x': x_sc, 'y': y_sc, 'color': col_sc})
 
         # heat = bq.GridHeatMap(color=z,
         #                scales={'row': x_sc, 'column': y_sc, 'color': col_sc}, stroke=None) #, row=y.tolist(), column=x.tolist())
 
-        # ax_c.side = 'right'
+        ax_c.side = 'right'
         figs.append(bq.Figure(title=title, marks=[heat], axes=[ax_x, ax_y, ax_c]))
         # fig.marks = [heat]
         # fig.axes = [ax_x, ax_y, ax_c]
@@ -305,13 +309,13 @@ def __plot_2d(input_data, name=None, axes=None, contours=False, cb=None,
         fig.save_png(filename)
     else:
         # plt.show()
-        return VBox((HBox(figs), tb))
-        # display(fig, tb)
+        # return VBox((HBox(figs), tb))
+        display(VBox((HBox(figs), tb)))
 
     return
 
 
 def get_bqplot_color(index=0):
-    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd'
+    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
               '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
     return colors[index % len(colors)]

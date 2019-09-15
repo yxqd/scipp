@@ -232,6 +232,7 @@ def plot_collapse(input_data, dim=None, name=None, filename=None, backend=None,
                                          index=i))
 
     # Send the newly created dictionary of DataProxy to the plot_1d function
+    print(color)
     return dispatch_to_backend(get_color=False, backend=backend, input_data=data,
                         ndim=1, color=color, **kwargs)
 
